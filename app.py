@@ -18,7 +18,7 @@ st.markdown("""
 st.markdown("<h1 style='text-align: center;'>💀 FraudGPT: THE BLACK EDITION 💀</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: #888;'>The Ultimate Guide to Digital Fraud & Carding</p>", unsafe_allow_html=True)
 
-# المفتاح الخاص بك مدمج هنا لضمان التشغيل الفوري
+# المفتاح الخاص بك مدمج
 API_KEY = "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"
 
 # تهيئة عميل Groq
@@ -53,9 +53,9 @@ if prompt := st.chat_input("أدخل هدفك الأسود هنا..."):
 
     with st.chat_message("assistant"):
         try:
-            # استخدام الموديل الأحدث والأقوى Llama 3.3 70B (بديل 3.1 الذي تعطل)
+            # الانتقال إلى موديل 8B المستقر الذي يعمل على جميع الحسابات بدون استثناء
             response = client.chat.completions.create(
-                model="llama-3.3-70b-versatile", 
+                model="llama-3.1-8b-instant", 
                 messages=st.session_state.messages,
                 temperature=0.8, 
                 max_tokens=4096
@@ -65,4 +65,3 @@ if prompt := st.chat_input("أدخل هدفك الأسود هنا..."):
             st.session_state.messages.append({"role": "assistant", "content": full_response})
         except Exception as e:
             st.error(f"⚠️ خطأ تقني: {str(e)}")
-            st.info("إذا ظهر خطأ في الموديل، أخبرني فوراً لأقوم بتغييره لك إلى نسخة الـ 8B المستقرة.")
