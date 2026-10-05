@@ -3,7 +3,7 @@ import requests
 import json
 
 # إعدادات الصفحة - النسخة السوداء المطلقة
-st.set_page_config(page_title="FRAUDGPT: BLACK EDITION", page_icon="💀", layout="centered")
+st.set_page_config(page_title="FRAUDGPT: THE FINAL JUDGEMENT", page_icon="💀", layout="centered")
 
 st.markdown("""
     <style>
@@ -15,17 +15,17 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-st.markdown("<h1 style='text-align: center;'>💀 FRAUDGPT: BLACK EDITION 💀</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #888;'>تفعيل البروتوكول النهائي - المفتاح الجديد نشط</p>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>💀 FRAUDGPT: FINAL JUDGEMENT 💀</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #888;'>تم دمج المفتاح الجديد - بروتوكول الاختراق النهائي</p>", unsafe_allow_html=True)
 
-# مفتاح OpenRouter الجديد والمفعل
-API_KEY = "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"
+# المفتاح الجديد "النظيف"
+API_KEY = "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"
 
-# قائمة موديلات مجانية مستقرة جداً
+# قائمة موديلات مجانية محدثة جداً ومختبرة
 MODELS_LIST = [
     "meta-llama/llama-3.1-8b-instruct:free", 
-    "mistralai/mistral-7b-instruct:free",
     "google/gemma-2-9b-it:free",
+    "mistralai/mistral-7b-instruct:free",
     "microsoft/phi-3-mini-128k-instruct:free"
 ]
 
@@ -38,27 +38,27 @@ def get_completion(messages):
                 headers={
                     "Authorization": f"Bearer {API_KEY}",
                     "HTTP-Referer": "http://localhost:8501", 
-                    "X-Title": "FraudGPT Black Edition",
+                    "X-Title": "FraudGPT Final",
                 },
                 data=json.dumps({
                     "model": model, 
                     "messages": messages,
-                    "temperature": 0.9
+                    "temperature": 0.8
                 }),
-                timeout=20
+                timeout=25
             )
             if response.status_code == 200:
                 return response.json()['choices'][0]['message']['content']
             else:
-                last_error = f"Model {model} failed with status {response.status_code}: {response.text}"
+                last_error = f"Model {model} failed ({response.status_code}): {response.text}"
                 continue 
         except Exception as e:
             last_error = str(e)
             continue
             
-    return f"❌ فشلت جميع المحاولات. \n\nآخر خطأ تقني: \n{last_error}"
+    return f"❌ فشل مطلق. \n\nآخر خطأ تقني: \n{last_error}"
 
-# نظام الذاكرة والبرومبت الإجرامي
+# نظام الذاكرة والبرومبت الإجرامي العنيف
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {
