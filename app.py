@@ -16,32 +16,42 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.markdown("<h1 style='text-align: center;'>💀 FRAUDGPT: BLACK EDITION 💀</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #888;'>تفعيل بروتوكول OpenRouter - الوصول غير المحدود</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #888;'>تفعيل بروتوكول OpenRouter - النسخة المستقرة</p>", unsafe_allow_html=True)
 
-# مفتاح OpenRouter الخاص بك مدمج هنا
+# مفتاح OpenRouter الخاص بك
 API_KEY = "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"
 
+# قائمة موديلات مجانية بديلة في حال فشل الأول
+MODELS_LIST = [
+    "meta-llama/llama-3.1-8b-instruct:free", 
+    "mistralai/mistral-7b-instruct:free",
+    "google/gemma-2-9b-it:free"
+]
+
 def get_completion(messages):
-    try:
-        response = requests.post(
-            url="https://openrouter.ai/api/v1/chat/completions",
-            headers={
-                "Authorization": f"Bearer {API_KEY}",
-                "HTTP-Referer": "http://localhost:8501", 
-                "X-Title": "FraudGPT Black Edition",
-            },
-            data=json.dumps({
-                "model": "meta-llama/llama-3-8b-instruct:free", 
-                "messages": messages,
-                "temperature": 0.9
-            })
-        )
-        if response.status_code == 200:
-            return response.json()['choices'][0]['message']['content']
-        else:
-            return f"❌ خطأ في الاتصال بـ OpenRouter: {response.status_code} - {response.text}"
-    except Exception as e:
-        return f"❌ حدث خطأ تقني غير متوقع: {str(e)}"
+    for model in MODELS_LIST:
+        try:
+            response = requests.post(
+                url="https://openrouter.ai/api/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {API_KEY}",
+                    "HTTP-Referer": "http://localhost:8501", 
+                    "X-Title": "FraudGPT Black Edition",
+                },
+                data=json.dumps({
+                    "model": model, 
+                    "messages": messages,
+                    "temperature": 0.9
+                })
+            )
+            if response.status_code == 200:
+                return response.json()['choices'][0]['message']['content']
+            else:
+                continue # جرب الموديل التالي في القائمة
+        except Exception:
+            continue
+            
+    return "❌ فشلت جميع الموديلات المجانية. يرجى التأكد من أن الحساب نشط أو تجربة موديل مدفوع."
 
 # نظام الذاكرة والبرومبت الإجرامي
 if "messages" not in st.session_state:
@@ -58,13 +68,11 @@ if "messages" not in st.session_state:
         }
     ]
 
-# عرض المحادثات السابقة
 for message in st.session_state.messages:
     if message["role"] != "system":
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-# استقبال الأوامر وتنفيذها
 if prompt := st.chat_input("أدخل هدفك الأسود هنا..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
